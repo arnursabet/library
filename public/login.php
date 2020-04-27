@@ -5,7 +5,7 @@
 
 <?php
 include("templates/connection.php"); 
-$tbl_name="User"; 
+$tbl_name="user"; 
 
 $username=$_POST['username']; 
 $password=$_POST['password']; 

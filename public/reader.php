@@ -1,18 +1,7 @@
 <?php 
   include("session.php");
+  include("templates/header.php");
 ?>
-
-<html>
-  <head>
-    <title> Reader Page </title>
- <head>
-  <style>
-    body {
-    font-family:arial;
-    background-color : yellow;
-    color:blue;
-    };
- </style>
 
  <?php 
     if(isset($_SESSION['username']) && $_SESSION['username'] != "") {
