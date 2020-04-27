@@ -1,5 +1,5 @@
 <?php 
-  include "templates/header.php"; 
+  include("templates/header.php"); 
 ?>
 
   <body>
@@ -32,8 +32,8 @@
 
                                     <div class="col-sm-12 controls">
                                 
-         <input type="button" class="btn btn-success pull-right" style='margin-left:25px' 
-           value="Register"  title="Click here to register to the system." onclick="location.href = 'signup.php';">                           
+         <!-- <input type="button" class="btn btn-success pull-right" style='margin-left:25px' 
+           value="Register"  title="Click here to register to the system." onclick="location.href = 'signup.php';">                            -->
            <button type="submit" name="submit" class="btn btn-success pull-right" title="Click here to Login in the system." >
            <span class="glyphicon glyphicon-check"></span> Login</button>
              

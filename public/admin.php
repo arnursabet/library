@@ -6,6 +6,7 @@ include("templates/header.php");
   Welcome To Administrator Page 
   </h1>
 
+  <a href="logout.php"> Log out </a>
 
 <nav class="navbar bg-light">
 
@@ -18,7 +19,7 @@ include("templates/header.php");
     <a class="nav-link" href="">Search document and check status</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link" href="">Add new reader</a>
+    <a class="nav-link" href="signup.php">Add new reader or admin</a>
   </li>
   <li class="nav-item">
     <a class="nav-link" href="">Print branch information</a>
@@ -27,13 +28,13 @@ include("templates/header.php");
     <a class="nav-link" href="">Print top 10 most frequent borrowers</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link" href="">Reserved documents</a>
+    <a class="nav-link" href="">Print top 10 most borrowed books</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link" href="">Document Reserve</a>
+    <a class="nav-link" href="">Print the 10 most popular books</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link" href="">Document's by publisher'</a>
+    <a class="nav-link" href="">Find the average fine paid per reader</a>
   </li>
 </ul>
 

@@ -15,7 +15,7 @@ $result = mysqli_query($dbhandle, "INSERT INTO $tbl_name (fname, lname, username
 if($result===TRUE)
 {
 echo "<script>alert('User Account has been saved in the database.');
-      window.location='index.php';
+      window.location='admin.php';
       </script>";
 }      
 else
