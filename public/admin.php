@@ -13,7 +13,7 @@ include("templates/header.php");
 <!-- Links -->
 <ul class="navbar-nav">
   <li class="nav-item">
-    <a class="nav-link" href="">Add a document</a>
+    <a class="nav-link" href="insert_doc.php">Add a document</a>
   </li>
   <li class="nav-item">
     <a class="nav-link" href="">Search document and check status</a>
