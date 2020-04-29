@@ -2,6 +2,9 @@
 
 include('templates/connection.php'); 
 include("templates/header.php"); 
+
+
+if(isset($_POST['doctype']) && isset($_POST['title']) && isset($_POST['id']) && isset($_POST['author']) && isset($_POST['quantity']) && isset($_POST['branch']) && isset($_POST['publisher'])){
 $tbl_name=$_POST['doctype'];
 $title=$_POST['title'];
 $id=$_POST['id'];
@@ -16,12 +19,25 @@ $query_id=mysqli_query($dbhandle,$sql_fetch_id);
 
 if(mysqli_num_rows($query_id)){
     mysqli_query($dbhandle,"UPDATE document"." SET quantity = (quantity+$quantity)"."WHERE doc_id = $id");
+    echo "The quantity has been updated successfully." ;
 }else{
     //how to insert in doc if there is no pub?
     $result = mysqli_query($dbhandle,"INSERT INTO document (doc_id,quantity,publisher,title,branch_num,doc_type) VALUES ('$id','$quantity','$publisher','$title','$branch','$tbl_name')");
+    
+      if($result===TRUE) {
+          
+    $result2 = mysqli_query($dbhandle,"INSERT INTO $tbl_name VALUES ('$title','$id','$author')");
+    
+    if($result2===TRUE){
+        echo "<script>alert('Document has been added to the database');
+          </script>";
+    }else{echo"error has occurred";}
+    } else {
+    echo"filling all fields is required";
+  } 
    
     }
-
+}
     
 
 
