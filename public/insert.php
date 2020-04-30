@@ -1,6 +1,7 @@
 <?php
 
 include("templates/connection.php"); 
+include("session.php");
 $tbl_name="user"; 
 
 $fname=$_POST['fname']; 

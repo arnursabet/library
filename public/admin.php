@@ -1,4 +1,5 @@
 <?php
+include("session.php");
 include("templates/header.php");
 ?>
 <body><br>
@@ -22,19 +23,19 @@ include("templates/header.php");
     <a class="nav-link" href="signup.php">Add new reader or admin</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link" href="">Print branch information</a>
+    <a class="nav-link" href="branch_info.php">Print branch information</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link" href="">Print top 10 most frequent borrowers</a>
+    <a class="nav-link" href="10_borrowers.php">Print top 10 most frequent borrowers</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link" href="">Print top 10 most borrowed books</a>
+    <a class="nav-link" href="10_borrowed.php">Print top 10 most borrowed books</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link" href="">Print the 10 most popular books</a>
+    <a class="nav-link" href="10_popular.php">Print the 10 most popular books</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link" href="">Find the average fine paid per reader</a>
+    <a class="nav-link" href="average_fine.php">Find the average fine paid per reader</a>
   </li>
 </ul>
 
