@@ -32,26 +32,60 @@ if (isset($_GET['submit'])) {
   $title = mysqli_real_escape_string($dbhandle,$title);
   $publisher = mysqli_real_escape_string($dbhandle,$publisher);
   
-  $sql = "SELECT * FROM $tbl_name WHERE ";
-  $condition = "";
-  $condition .= ($docid=='') ? "" : "doc_id like '%$docid%' ";
-  $condition .= ($docid=='') ? "" : "or";
+  $sql = "SELECT * FROM $tbl_name";
+  $condition = ($docid == '' && $title == '' && $publisher == '') ? '' : ' where ';
+  $condition .= ($docid=='') ? "" : "doc_id = '$docid' ";
+  $condition .= ($docid!='') ? (($publisher!='' || $title!='') ? "or" : "") : "";
   $condition .= ($title=='') ? "" : " title like '%$title%' ";
   $condition .= ($docid!='') ? (($publisher!='') ? "or" : "") : (($title!='') ? (($publisher!='') ? "or" : "") : "");
   $condition .= ($publisher=='') ? "" : " publisher like '%$publisher%' "; 
   
   $sql .= $condition;
-  
+  echo $sql;
   $result = mysqli_query($dbhandle, $sql);
-  
+
   if(mysqli_num_rows($result) == 0){
         echo "<h2>Nothing found</h2>";
   }else{ 
+        echo '<table>';
+        echo '<th>Creator</th>';
+        echo '<th>Document ID</th>';
+        echo '<th>Title</th>';
+        echo '<th>Publisher</th>';
+        echo '<th>Quantity</th>';
+        echo '<th>Type</th>';
+        echo '<tbody>';
         while ($row = $result->fetch_assoc()) {
-        
-          print_r($row);
+          echo '<tr>';
+          $document_id = (int) $row['doc_id'];
+            if ($row['doc_type'] == 'book'){
+              $book = mysqli_query($dbhandle, "select author from book where ISBN = $document_id");
+              $row1 = $book -> fetch_assoc();
+              //echo $row1;
+              echo '<td>'. $row1['author'].'</td>';
+              $book -> free();
+            }
+            else if($row['doc_type'] == 'journal'){
+              $journal = mysqli_query($dbhandle, "select editor from journal where journal_id = $document_id");
+              $row2 = $journal -> fetch_assoc();
+              echo '<td>'. $row2['editor'].'</td>';
+              $journal -> free();
+            } else {
+              $dvd = mysqli_query($dbhandle, "select director from dvd where DVD_id = $document_id");
+              $row3 = $dvd -> fetch_assoc();
+              echo '<td>'. $row3['director'].'</td>';
+              $dvd -> free();
+            }
+            echo '<td>'. $row['doc_id'].'</td>';
+            echo '<td>'. $row['title'].'</td>';
+            echo '<td>'. $row['publisher'].'</td>';
+            echo '<td>'. $row['quantity'].'</td>';
+            echo '<td>'. $row['doc_type'].'</td>';
+          echo '</tr> ';
           
         } 
+        echo '</tbody>';
+        echo '</table>';
         $result->free();
        }
        $dbhandle->close();
