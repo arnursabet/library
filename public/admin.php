@@ -17,7 +17,7 @@ include("templates/header.php");
     <a class="nav-link" href="insert_doc.php">Add a document</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link" href="">Search document and check status</a>
+    <a class="nav-link" href="admin_search.php">Search document and check status</a>
   </li>
   <li class="nav-item">
     <a class="nav-link" href="signup.php">Add new reader or admin</a>

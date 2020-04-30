@@ -3,8 +3,7 @@
      include("session.php");
 
      if(isset($_SESSION["username"]) && $_SESSION["username"]!="") {
-        echo "";
-        echo "<br>";
+       
 ?>
 <h2>admin search and statues checker</h2>
 <form method="get" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
