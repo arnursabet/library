@@ -3,9 +3,10 @@
      include("session.php");
 
      if(isset($_SESSION["username"]) && $_SESSION["username"]!="") {
-        echo $_SESSION["fullname"];
+        echo "";
         echo "<br>";
 ?>
+<h2>admin search and statues checker</h2>
 <form method="get" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
     Document ID:  <input type="text" name="docid"/>
 	  <br><br>
@@ -48,8 +49,13 @@ if (isset($_GET['submit'])) {
         echo "<h2>Nothing found</h2>";
   }else{ 
         while ($row = $result->fetch_assoc()) {
-        
-          print_r($row);
+        $doc_id=$row['doc_id'];
+        $quantity=$row['quantity'];
+        $branch_num=$row['branch_num'];
+        $avilable= $quantity-(mysqli_num_rows(mysqli_query($dbhandle,"SELECT * from document , borrows where document.doc_id = document_num and doc_id=$doc_id and document.branch_num = borrows.branch_num =$branch_num and returned =0")));
+                                    
+        print_r($row);
+        print_r("The number of avilble copies is $avilable ");
           
         } 
         $result->free();

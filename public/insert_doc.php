@@ -2,7 +2,9 @@
 
 include('templates/connection.php'); 
 include("templates/header.php"); 
+include("session.php");
 
+     if(isset($_SESSION["username"]) && $_SESSION["username"]!=""){
 
 if(isset($_POST['doctype']) && isset($_POST['title']) && isset($_POST['id']) && isset($_POST['author']) && isset($_POST['quantity']) && isset($_POST['branch']) && isset($_POST['publisher'])){
 $tbl_name=$_POST['doctype'];
@@ -92,3 +94,9 @@ function cahngefields() {
     </body>
 
 </html>
+<?php
+    } else {
+            echo "You are not supposed to be here!<br>";
+            echo "<a href='index.php'>Login</a> to continue.";
+        }
+ ?>     
