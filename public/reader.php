@@ -22,7 +22,7 @@
     <a class="nav-link" href="search.php">Search</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link" href="checkout.php">Document Checkout</a>
+    <a class="nav-link" href="search.php">Document Checkout</a>
   </li>
   <li class="nav-item">
     <a class="nav-link" href="return.php">Document Return</a>

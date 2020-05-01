@@ -1,6 +1,7 @@
 <?php
      include("templates/connection.php");
      include("session.php");
+     include("templates/header.php");
 
      if(isset($_SESSION["username"]) && $_SESSION["username"]!="") {
         echo $_SESSION["fullname"];
@@ -18,6 +19,11 @@
     <br><br>
 </form>
 <?php
+$username = $_SESSION["username"];
+$user_id_query = mysqli_query($dbhandle, "select user_id from user where username = '$username'") or die($dbhandle->error);
+$user_id = $user_id_query -> fetch_assoc();
+$_SESSION['user_id'] = $user_id["user_id"];
+
 if (isset($_GET['submit'])) {
 
   $tbl_name="document"; 
@@ -41,37 +47,46 @@ if (isset($_GET['submit'])) {
   $condition .= ($publisher=='') ? "" : " publisher like '%$publisher%' "; 
   
   $sql .= $condition;
-  echo $sql;
-  $result = mysqli_query($dbhandle, $sql);
+
+  $result = mysqli_query($dbhandle, $sql) or die($dbhandle->error);
 
   if(mysqli_num_rows($result) == 0){
         echo "<h2>Nothing found</h2>";
   }else{ 
-        echo '<table>';
-        echo '<th>Creator</th>';
-        echo '<th>Document ID</th>';
-        echo '<th>Title</th>';
-        echo '<th>Publisher</th>';
-        echo '<th>Quantity</th>';
-        echo '<th>Type</th>';
-        echo '<tbody>';
+        ?>
+        <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Creator</th>
+                <th>Document ID</th>
+                <th>Title</th>
+                <th>Publisher</th>
+                <th>Quantity</th>
+                <th>Type</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+        <tbody>
+        <?php
+        
         while ($row = $result->fetch_assoc()) {
           echo '<tr>';
           $document_id = (int) $row['doc_id'];
             if ($row['doc_type'] == 'book'){
-              $book = mysqli_query($dbhandle, "select author from book where ISBN = $document_id");
+              $book = mysqli_query($dbhandle, "select author from book where ISBN = $document_id") or die($dbhandle->error);
               $row1 = $book -> fetch_assoc();
               //echo $row1;
               echo '<td>'. $row1['author'].'</td>';
               $book -> free();
             }
             else if($row['doc_type'] == 'journal'){
-              $journal = mysqli_query($dbhandle, "select editor from journal where journal_id = $document_id");
+              $journal = mysqli_query($dbhandle, "select editor from journal where journal_id = $document_id") or die($dbhandle->error);
               $row2 = $journal -> fetch_assoc();
               echo '<td>'. $row2['editor'].'</td>';
               $journal -> free();
             } else {
-              $dvd = mysqli_query($dbhandle, "select director from dvd where DVD_id = $document_id");
+              $dvd = mysqli_query($dbhandle, "select director from dvd where DVD_id = $document_id") or die($dbhandle->error);
               $row3 = $dvd -> fetch_assoc();
               echo '<td>'. $row3['director'].'</td>';
               $dvd -> free();
@@ -81,18 +96,98 @@ if (isset($_GET['submit'])) {
             echo '<td>'. $row['publisher'].'</td>';
             echo '<td>'. $row['quantity'].'</td>';
             echo '<td>'. $row['doc_type'].'</td>';
-          echo '</tr> ';
+
+            
+            $docnum = $row['doc_id'];
+            $user_id = $_SESSION['user_id'];
+            $borrows_query = mysqli_query($dbhandle, "select document_num, returned, branch_num from borrows where reader_num = $user_id and document_num = $docnum") or die($dbhandle->error);
+            $borrows = $borrows_query -> fetch_assoc();
+            
+            if(mysqli_num_rows($borrows_query) == 0){ 
+              $branchnum = $row['branch_num']; 
+              ?>
+              <td>
+                <form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
+                  <input name="docid" type="hidden" value="<?php echo $docnum;?>">
+                  <input name="branchnum" type="hidden" value="<?php echo $branchnum;?>">
+                  <input type="submit" class="btn btn-success" name="borrow" value="Borrow">
+                </form>
+              </td>
+            <?php }
+            
+            else {
+              $branchnum = $borrows['branch_num'];
+              $docnum = $borrows['document_num'];
+              if($borrows['returned']==1) { ?>
+               <td>
+                <form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
+                  <input name="docid" type="hidden" value="<?php echo $docnum;?>">
+                  <input name="branchnum" type="hidden" value="<?php echo $branchnum;?>">
+                  <input type="submit" class="btn btn-success" name="borrow" value="Borrow Again">
+                </form>
+              </td>
+              <?php }
+              else { ?>
+                <td>
+                  <form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
+                    <input name="docid" type="hidden" value="<?php echo $docnum;?>">
+                    <input name="branchnum" type="hidden" value="<?php echo $branchnum;?>">
+                    <input type="submit" class="btn btn-danger" name="return" value="Return">
+                  </form>
+                </td>
+              <?php }
+            } ?>
+            
+          </tr>
           
-        } 
-        echo '</tbody>';
-        echo '</table>';
+        <?php } ?>
+        
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </form>
+        <?php 
         $result->free();
        }
+       
+       
        $dbhandle->close();
-  
+       
 
 }
+function borrow() {
+  include('templates/connection.php');
+  $user_id = $_SESSION['user_id'];
+  $doc_id = $_POST["docid"];
+  $branch_num = $_POST["branchnum"];
+  $date = date("Y-m-d");
+  //Create the SQL query
 
+  $sql = "insert into borrows(reader_num, branch_num, document_num, date, returned) values";
+  $sql .= "('$user_id', '$branch_num', '$doc_id', '$date', 0)";
+  echo $sql;      
+  $result = mysqli_query($dbhandle, $sql);
+
+  $sql = "";
+  //Create the SQL query
+  $sql = "update document set n_reserved=n_reserved+1 where ";
+  $sql = $sql. "doc_id = '$doc_id'";
+  
+  $result = mysqli_query($dbhandle, $sql);
+
+  $sql = "";
+  $sql = "update reader set n_borrowed=n_borrowed+1 where ";
+  $sql = $sql. "reader_id = $user_id";
+  
+  $result = mysqli_query($dbhandle, $sql);
+
+  echo "<br>Successfully borrowed book";
+}
+if(isset($_POST['docid'])){
+  borrow();
+  
+} 
 ?>
 
 <?php
