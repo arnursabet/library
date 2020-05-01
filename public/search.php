@@ -2,21 +2,25 @@
      include("templates/connection.php");
      include("session.php");
      include("templates/header.php");
-
-     if(isset($_SESSION["username"]) && $_SESSION["username"]!="") {
-        echo $_SESSION["fullname"];
-        echo "<br>";
+     include("templates/navbar.php");
 ?>
-<form method="get" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
-    Document ID:  <input type="text" name="docid"/>
-	  <br><br>
-    Title: <input type="text" name="title"/>
-    <br><br>
-    Publisher: <input type="text" name="publisher"/>
-    <br><br>
-    <input type="submit" name="submit" value="Search"/>&nbsp;&nbsp;&nbsp;&nbsp;
-    <input type="reset" value="Clear"/>
-    <br><br>
+
+<div class="container">
+<form method="get" class="form" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
+  <div class="form-group">
+    <label><strong>Document ID</strong></label> 
+    <input type="text" class="form-control" name="docid" placeholder="ISBN, DVD ID or Journal ID"/>
+  </div>
+  <div class="form-group">
+	  <label><strong>Title</strong></label>
+    <input type="text" class="form-control" name="title" placeholder="Title"/>
+  </div>
+  <div class="form-group">
+    <label><strong>Publisher</strong></label>
+    <input type="text" class="form-control" name="publisher" placeholder="Publisher"/>
+  </div>
+    <input class="btn btn-primary"type="submit" name="submit" value="Search"/>
+    <input class="btn btn-secondary"type="reset" value="Clear"/>
 </form>
 <?php
 $username = $_SESSION["username"];
@@ -123,7 +127,7 @@ if (isset($_GET['submit'])) {
                 <form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
                   <input name="docid" type="hidden" value="<?php echo $docnum;?>">
                   <input name="branchnum" type="hidden" value="<?php echo $branchnum;?>">
-                  <input type="submit" class="btn btn-success" name="borrow" value="Borrow Again">
+                  <input type="submit" class="btn btn-warning" name="borrow" value="Borrow Again">
                 </form>
               </td>
               <?php }
@@ -147,6 +151,7 @@ if (isset($_GET['submit'])) {
             </div>
           </div>
         </form>
+        </div>
         <?php 
         $result->free();
        }
@@ -163,16 +168,22 @@ function borrow() {
   $branch_num = $_POST["branchnum"];
   $date = date("Y-m-d");
   //Create the SQL query
-
-  $sql = "insert into borrows(reader_num, branch_num, document_num, date, returned) values";
-  $sql .= "('$user_id', '$branch_num', '$doc_id', '$date', 0)";
-  echo $sql;      
-  $result = mysqli_query($dbhandle, $sql);
-
+  $borrows_query = mysqli_query($dbhandle, "select document_num, returned, branch_num from borrows where reader_num = '$user_id' and document_num = '$doc_id'") or die($dbhandle->error);
+  $borrows = $borrows_query -> fetch_assoc();
+            
+  if(mysqli_num_rows($borrows_query) == 0){ 
+    $sql = "insert into borrows(reader_num, branch_num, document_num, date, returned) values";
+    $sql .= "('$user_id', '$branch_num', '$doc_id', '$date', 0)";     
+    $result = mysqli_query($dbhandle, $sql);
+  } else {
+      $sql = "update borrows set returned=0, date='$date' where ";
+      $sql .= "reader_num='$user_id' and branch_num='$branch_num' and document_num='$doc_id'";     
+      $result = mysqli_query($dbhandle, $sql);
+  }
   $sql = "";
   //Create the SQL query
   $sql = "update document set n_reserved=n_reserved+1 where ";
-  $sql = $sql. "doc_id = '$doc_id'";
+  $sql = $sql. "doc_id = '$doc_id' and branch_num = '$branch_num'";
   
   $result = mysqli_query($dbhandle, $sql);
 
@@ -181,18 +192,62 @@ function borrow() {
   $sql = $sql. "reader_id = $user_id";
   
   $result = mysqli_query($dbhandle, $sql);
-
-  echo "<br>Successfully borrowed book";
-}
-if(isset($_POST['docid'])){
-  borrow();
   
+  echo '<div class="container"><div class="alert alert-success alert-dismissible" id="borrowDocAlert">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+          <strong>Success!</strong> You borrowed the document.
+        </div></div>
+        <script>
+        $(".close").click(function () {
+          window.location="search.php?docid=&title=&publisher=&submit=Search";
+        });
+        </script>';
+}
+if(isset($_POST['docid']) && !isset($_POST['return'])){
+  borrow();  
+} 
+
+function returnDoc() {
+  include('templates/connection.php');
+  $user_id = $_SESSION['user_id'];
+  $doc_id = $_POST["docid"];
+  $branch_num = $_POST["branchnum"];
+  
+  $sql = "update borrows set returned=1 where ";
+  $sql .= "reader_num='$user_id' and branch_num='$branch_num' and document_num='$doc_id'";     
+  $result = mysqli_query($dbhandle, $sql);
+
+  $sql = "";
+  $sql = "update document set n_reserved=n_reserved-1 where ";
+  $sql = $sql. "doc_id = '$doc_id'";
+  
+  $result = mysqli_query($dbhandle, $sql);
+
+  $sql = "";
+  $sql = "update reader set n_borrowed=n_borrowed-1 where ";
+  $sql = $sql. "reader_id = $user_id";
+  
+  $result = mysqli_query($dbhandle, $sql);
+  
+  echo '<div class="container"><div class="alert alert-success alert-dismissible" id="returnDocAlert">
+          <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+          <strong>Success!</strong> You returned the document.
+          </div></div>
+        <script>
+          $(".close").click(function () {
+            window.location="search.php?docid=&title=&publisher=&submit=Search";
+          });
+        </script>';
+}
+if(isset($_POST['return'])){
+  returnDoc();  
 } 
 ?>
+         
 
-<?php
-    } else {
-            echo "You are not supposed to be here!<br>";
-            echo "<a href='index.php'>Login</a> to continue.";
-        }
- ?>           
+
+
+  
+
+  
+  
