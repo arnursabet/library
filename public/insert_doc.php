@@ -6,7 +6,7 @@ include("session.php");
 
      if(isset($_SESSION["username"]) && $_SESSION["username"]!=""){
 
-if(isset($_POST['doctype']) && isset($_POST['title']) && isset($_POST['id']) && isset($_POST['author']) && isset($_POST['quantity']) && isset($_POST['branch']) && isset($_POST['publisher'])){
+if(isset($_POST['doctype']) && isset($_POST['title']) && isset($_POST['id']) && isset($_POST['author']) && isset($_POST['quantity']) && isset($_POST['branch']) && isset($_POST['publisher']) ){
 $tbl_name=$_POST['doctype'];
 $title=$_POST['title'];
 $id=$_POST['id'];
@@ -14,7 +14,9 @@ $author=$_POST['author'];
 $quantity=$_POST['quantity'];
 $branch=$_POST['branch'];
 $publisher=$_POST['publisher'];
-
+if(isset($_POST['volume'])){    
+    $volume=$_POST['volume'];}
+    
 $sql_fetch_id="SELECT doc_id FROM document WHERE doc_id =$id";
 
 $query_id=mysqli_query($dbhandle,$sql_fetch_id);
@@ -22,13 +24,41 @@ $query_id=mysqli_query($dbhandle,$sql_fetch_id);
 if(mysqli_num_rows($query_id)){
     mysqli_query($dbhandle,"UPDATE document"." SET quantity = (quantity+$quantity)"."WHERE doc_id = $id");
     echo "The quantity has been updated successfully." ;
+    
+    switch($tbl_name){
+        case 'journal':
+            $query_id=mysqli_query($dbhandle,"SELECT * FROM $tbl_name WHERE journal_id =$id");
+            if(mysqli_num_rows($query_id)){break;}else{
+            mysqli_query($dbhandle,"INSERT INTO $tbl_name VALUES ('$title','$id','$author','$volume')");
+            break;
+            }
+        case 'dvd':
+            $query_id=mysqli_query($dbhandle,"SELECT * FROM $tbl_name WHERE DVD_id =$id");
+            if(mysqli_num_rows($query_id)){break;}else{
+            mysqli_query($dbhandle,"INSERT INTO $tbl_name VALUES ('$title','$id','$author')");
+            break;
+            }
+        case 'book':
+            $query_id=mysqli_query($dbhandle,"SELECT * FROM $tbl_name WHERE ISBN =$id");
+            if(mysqli_num_rows($query_id)){break;}else{
+            mysqli_query($dbhandle,"INSERT INTO $tbl_name VALUES ('$title','$id','$author')");
+            break;
+            }
+        
+    }
+
+    
 }else{
     //how to insert in doc if there is no pub?
     $result = mysqli_query($dbhandle,"INSERT INTO document (doc_id,quantity,publisher,title,branch_num,doc_type) VALUES ('$id','$quantity','$publisher','$title','$branch','$tbl_name')");
     
       if($result===TRUE) {
-          
-    $result2 = mysqli_query($dbhandle,"INSERT INTO $tbl_name VALUES ('$title','$id','$author')");
+          //if here to spreate if the boi is jounral and add volume 
+    if($tbl_name != 'journal'){
+    $result2 = mysqli_query($dbhandle,"INSERT INTO $tbl_name VALUES ('$title','$id','$author')");}
+        else{
+    $result2 = mysqli_query($dbhandle,"INSERT INTO $tbl_name VALUES ('$title','$id','$author','$volume')");
+    }
     
     if($result2===TRUE){
         echo "<script>alert('Document has been added to the database');
@@ -61,6 +91,7 @@ if(mysqli_num_rows($query_id)){
                 <input type="text" name="quantity" value = "" placeholder ="Quantity" >
                 <input type="text" name="publisher" value = "" placeholder ="Publisher" >
                 <input type="text" name="branch" value = "" placeholder ="Branch Num" >
+                <input type="text" name="volume" value = "" placeholder ="Volume Num" id="volume" hidden>
                 <input type="submit" name="submit" value="Add">
         
                 <script>
@@ -70,19 +101,19 @@ function cahngefields() {
      case "dvd":
          document.getElementById("sec_box").placeholder="ID";
          document.getElementById("thir_box").placeholder="Director";
+         document.getElementById("volume").hidden= true; 
          
          break;
      case "book":
          document.getElementById("sec_box").placeholder="ISBN";
-         
+         document.getElementById("volume").hidden= true; 
          document.getElementById("thir_box").placeholder="Author";
          
          break;
     case "journal":
          document.getElementById("sec_box").placeholder="ID";
-         
          document.getElementById("thir_box").placeholder="Editor";
-         
+         document.getElementById("volume").hidden= false;         
          break;
  }
 }
