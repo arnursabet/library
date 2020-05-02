@@ -1,6 +1,8 @@
 <?php
-include("admin.php");
-include("templates/connection.php");
+include('templates/connection.php');
+include("session.php");
+include("templates/header.php");
+include("templates/navbar.php");
 ?>
 <body><br>
 <?php
@@ -17,7 +19,6 @@ include("templates/connection.php");
 	while($top_doc = $top_title->fetch_assoc())
 	{
 		array_push($doc_nums, $top_doc['document_num']);
-		//echo $top_doc['document_num'];
 		$doc = $top_doc['document_num'];
 		$title_query = "SELECT * FROM `document` ";
 		$title_query .= "WHERE `doc_id` =  $doc";
