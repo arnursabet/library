@@ -1,5 +1,13 @@
 <?php 
   include("templates/header.php");
+  
+  session_start();
+  if (isset($_SESSION['username'])){
+    $page = ($_SESSION['usertype'] == 'admin') ? 'admin.php' : 'reader.php';
+    header("Location: $page");
+  }
+  
+
 ?>
 
   <body>
