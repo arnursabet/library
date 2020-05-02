@@ -8,13 +8,11 @@ function logged_in() {
 return isset($_SESSION['username']);        
 }
 //this function if session member is not set then it will be redirected to index.php
-function confirm_logged_in() {
-if (!logged_in()) {?>
+
+if (!logged_in()) { ?>
+
 <script type="text/javascript">
 window.location = "index.php";
 </script>
 
-<?php
-}
-}
-?>
+<?php } ?>
