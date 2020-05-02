@@ -26,6 +26,7 @@ if(mysqli_num_rows($result) != 1){
       session_start();
       $_SESSION['username'] = $row['username'];
       $_SESSION['fullname'] = $row['fname'] . " " . $row['lname'];
+      $_SESSION['userid'] = $row['user_id'];
 
       if($row['usertype'] == "admin"){
        

@@ -1,6 +1,6 @@
 <html>
-<body><br>
-
+<body>
+<p style="text-align:right;"><a href="admin.php">Home</a></p>
 <?php
 include('templates/connection.php');
 $branch_list="SELECT * FROM branch ORDER BY name ";

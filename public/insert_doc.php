@@ -78,7 +78,9 @@ if(mysqli_num_rows($query_id)){
 <html>
  <?php include("templates/header.php"); ?>
     <body>
-       
+        <p style="text-align:right;"><a href="admin.php">Home</a></p>
+        <h2>Document insertation</h2>
+        
             <form action="insert_doc.php" method="post">
             <select id="doctype" onchange="cahngefields()" name="doctype"> 
                 <option value="book">Book</option>
