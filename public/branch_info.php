@@ -9,7 +9,7 @@ include("templates/header.php");
 include("templates/navbar.php");
 $branch_list="SELECT * FROM branch ORDER BY name ";
 $result =mysqli_query($dbhandle,$branch_list);
-$branches ="<table style='width:100%'><tr><th>Branch Name</th><th>ID</th></tr>";
+$branches ="<table class='table'><tr><th>Branch Name</th><th>ID</th></tr>";
 if(mysqli_num_rows($result)>0){
     while($row = $result->fetch_assoc()){
         $name = $row['name'];

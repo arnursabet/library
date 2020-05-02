@@ -78,9 +78,10 @@ if(mysqli_num_rows($query_id)){
 
 <html>
     <body>
-        <h2>Document insertation</h2>
+       <div class="container">
+           <div class="form-group">
         
-            <form action="insert_doc.php" method="post">
+            <form action="insert_doc.php" method="post" class="form">
             <select id="doctype" onchange="cahngefields()" name="doctype"> 
                 <option value="book">Book</option>
                 <option value="dvd">DVD</option>
@@ -93,8 +94,8 @@ if(mysqli_num_rows($query_id)){
                 <input type="text" name="publisher" value = "" placeholder ="Publisher" >
                 <input type="text" name="branch" value = "" placeholder ="Branch Num" >
                 <input type="text" name="volume" value = "" placeholder ="Volume Num" id="volume" hidden>
-                <input type="submit" name="submit" value="Add">
-        
+                <input class="btn btn-primary" type="submit" name="submit" value="Add"/>
+                </div> </div>        
                 <script>
 function cahngefields() {
   var x = document.getElementById("doctype").value;
