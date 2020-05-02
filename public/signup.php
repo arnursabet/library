@@ -47,7 +47,7 @@
 
                                     <div class="col-sm-12 controls">
                                 
-         <input type="button" class="btn btn-success pull-right" style='margin-left:25px' value="Cancel" 
+         <input type="button" class="btn btn-secondary pull-right" style='margin-left:25px' value="Cancel" 
           title="Click to return to main page." onclick="location.href = 'admin.php';">                           
            <button type="submit" class="btn btn-success pull-right" title="Click here to save the records in the database." >
            <span class="glyphicon glyphicon-check"></span> Ok</button>
