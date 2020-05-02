@@ -15,6 +15,7 @@ if(mysqli_num_rows($result)>0){
         $title = $row['title'];
         $id =$row['doc_id'];
         $date=$row['date'];
+        $fine_query="DATEDIFF(CURDATE(),$date)"
         $documents .="<tr><td>$title</td><td>$id</td><td>$date</td><td></td></tr>";
     }
     $documents .="</table>";
