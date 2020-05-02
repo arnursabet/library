@@ -1,8 +1,9 @@
 <?php 
 
-include('templates/connection.php'); 
-include("templates/header.php"); 
+include('templates/connection.php');
 include("session.php");
+include("templates/header.php");
+include("templates/navbar.php");
 
      if(isset($_SESSION["username"]) && $_SESSION["username"]!=""){
 
@@ -76,9 +77,7 @@ if(mysqli_num_rows($query_id)){
 ?>
 
 <html>
- <?php include("templates/header.php"); ?>
     <body>
-        <p style="text-align:right;"><a href="admin.php">Home</a></p>
         <h2>Document insertation</h2>
         
             <form action="insert_doc.php" method="post">

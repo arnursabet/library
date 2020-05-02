@@ -1,6 +1,8 @@
 <?php
-     include("templates/connection.php");
-     include("session.php");
+include('templates/connection.php');
+include("session.php");
+include("templates/header.php");
+include("templates/navbar.php");
 
      if(isset($_SESSION["username"]) && $_SESSION["username"]!="") {
         echo $_SESSION["fullname"];

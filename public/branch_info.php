@@ -1,8 +1,12 @@
 <html>
 <body>
-<p style="text-align:right;"><a href="admin.php">Home</a></p>
+
 <?php
+
 include('templates/connection.php');
+include("session.php");
+include("templates/header.php");
+include("templates/navbar.php");
 $branch_list="SELECT * FROM branch ORDER BY name ";
 $result =mysqli_query($dbhandle,$branch_list);
 $branches ="<table style='width:100%'><tr><th>Branch Name</th><th>ID</th></tr>";
