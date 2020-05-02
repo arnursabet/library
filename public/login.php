@@ -27,6 +27,7 @@ if(mysqli_num_rows($result) != 1){
       $_SESSION['username'] = $row['username'];
       $_SESSION['fullname'] = $row['fname'] . " " . $row['lname'];
       $_SESSION['usertype'] = $row['usertype'];
+      $_SESSION['userid'] = $row['user_id'];
       if($row['usertype'] == "admin"){
        
        header('location: admin.php');
