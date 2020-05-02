@@ -30,7 +30,7 @@
     <a class="nav-link" href="fine.php">Compute fine</a>
   </li>
   <li class="nav-item">
-    <a class="nav-link" href="by_publisher.php">Document's by publisher</a>
+    <a class="nav-link" href="by_publisher.php">Documents by publisher</a>
   </li>
 </ul>
 

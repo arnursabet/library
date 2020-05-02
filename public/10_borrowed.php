@@ -28,13 +28,11 @@ include("templates/navbar.php");
 	
 	if($branch!=0)
 	{
-	$doc_nums = array();
-	echo "Top Ten Most Borrowed Books Right Now";
+	echo "Top Ten Most Borrowed Books Right Now in Branch $branch";
 	echo "<br>";
 	$count=1;
 	while($top_doc = $top_title->fetch_assoc())
 	{
-		array_push($doc_nums, $top_doc['document_num']);
 		$doc = $top_doc['document_num'];
 		$title_query = "SELECT * FROM `document` ";
 		$title_query .= "WHERE `doc_id` =  $doc AND `branch_num` = $branch";
