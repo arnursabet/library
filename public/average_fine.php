@@ -16,7 +16,8 @@ if(mysqli_num_rows($result)>0){
 }
         
     } $avg = $total / mysqli_num_rows(mysqli_query($dbhandle,"select * from reader"));
-    echo"The avrage fine paid by a reader is $avg $";
+    $avg=round($avg,2);
+    echo"The average fine paid by a reader is $avg $"  ;
 }else{echo "No documents are currently borrowed";}
 
 ?>
